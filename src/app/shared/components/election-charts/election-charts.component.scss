@@ -1,0 +1,170 @@
+.charts-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.chart-card {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.chart-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.15rem;
+  color: var(--color-primary-dark);
+  font-size: 1rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.chart-heading h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.25rem, 5vw, 1.65rem);
+  line-height: 1.2;
+}
+
+.chart-symbol {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--color-primary-dark);
+  font-size: 2.1rem;
+  font-weight: 750;
+}
+
+.chart-explanation,
+.chart-empty,
+.chart-data-summary,
+.chart-footnote {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.chart-empty {
+  display: grid;
+  min-height: 10rem;
+  align-content: center;
+  padding: 1rem;
+  border-radius: 0.85rem;
+  background: #f4f6f7;
+}
+
+.chart-canvas {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.timeline-chart,
+.section-chart {
+  height: 16rem;
+}
+
+.chart-data-list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chart-data-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.legend-dot {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: 0 0 auto;
+  margin-block-start: 0.22rem;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.section-chart-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.section-chart-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block-end: 1rem;
+  pointer-events: none;
+}
+
+.section-chart-center strong {
+  color: var(--color-text);
+  font-size: clamp(1.7rem, 7vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.section-chart-center span {
+  color: var(--color-muted);
+  font-size: 1rem;
+}
+
+.chart-data-summary {
+  color: var(--color-text);
+  font-weight: 650;
+}
+
+.chart-footnote {
+  padding: 0.65rem;
+  border-radius: 0.65rem;
+  background: #fff5e5;
+  color: #633f13;
+}
+
+@media (min-width: 48rem) {
+  .chart-card {
+    padding: 1.2rem;
+  }
+
+  .is-detailed .chart-card {
+    padding: 1.5rem;
+  }
+
+  .is-detailed .timeline-chart,
+  .is-detailed .section-chart {
+    height: 24rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .charts-grid:not(.is-detailed) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .charts-grid:not(.is-detailed) .chart-card:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .is-detailed .chart-card {
+    padding: 1.65rem;
+  }
+}

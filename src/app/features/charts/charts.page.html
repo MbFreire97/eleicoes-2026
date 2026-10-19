@@ -1,0 +1,19 @@
+<section class="feature-page" aria-labelledby="charts-title">
+  <p class="eyebrow">Acompanhamento detalhado</p>
+  <h1 id="charts-title">Gráficos</h1>
+  <p class="page-description">
+    Compare votos, veja a evolução das atualizações capturadas e acompanhe o avanço das seções.
+    Os números também aparecem em texto para facilitar a leitura.
+  </p>
+
+  @if (snapshot(); as election) {
+    <p class="source-note">{{ sourceNote() }}</p>
+    <app-election-charts [snapshot]="election" [detailed]="true" />
+  } @else if (isLoading()) {
+    <p class="state-message" role="status">Consultando dados da eleição...</p>
+  } @else {
+    <p class="state-message state-message--error" role="alert">
+      {{ errorMessage() ?? 'Os gráficos ainda não têm dados disponíveis.' }}
+    </p>
+  }
+</section>

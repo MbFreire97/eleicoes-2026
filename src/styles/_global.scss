@@ -1,0 +1,134 @@
+@use './tokens';
+@use './mixins' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 20rem;
+  background: var(--color-background);
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+}
+
+html[data-font-scale='large'] {
+  font-size: 112.5%;
+}
+
+html[data-font-scale='extra-large'] {
+  font-size: 125%;
+}
+
+html[data-high-contrast='true'] {
+  --color-background: #fff;
+  --color-surface: #fff;
+  --color-header: #071b23;
+  --color-header-text: #fff;
+  --color-primary: #00645b;
+  --color-primary-dark: #00544c;
+  --color-secondary: #a9361d;
+  --color-secondary-dark: #76230f;
+  --color-text: #000;
+  --color-muted: #252525;
+  --color-border: #292929;
+  --color-focus: #00544c;
+  --color-disabled-surface: #dedede;
+  --color-disabled-text: #292929;
+  --shadow-card: 0 0 0 1px #333;
+}
+
+body {
+  min-width: 20rem;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--font-size-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a {
+  font: inherit;
+  @include visible-focus;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  background: var(--color-disabled-surface);
+  color: var(--color-disabled-text);
+  cursor: not-allowed;
+}
+
+.surface-card {
+  @include surface-card;
+}
+
+.official-alert-banner {
+  display: flex;
+  width: min(100% - 2rem, 76rem);
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem auto 0;
+  padding: 1rem;
+  border: 2px solid var(--color-primary-dark);
+  border-radius: var(--radius-card);
+  background: #e6f3f0;
+  color: var(--color-text);
+}
+
+.official-alert-banner p {
+  margin: 0.35rem 0;
+  font-size: var(--font-size-body);
+  line-height: 1.45;
+}
+
+.official-alert-banner a {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  color: var(--color-primary-dark);
+  font-weight: 750;
+  text-underline-offset: 0.2em;
+}
+
+.official-alert-banner button {
+  min-width: 3rem;
+  min-height: 3rem;
+  border: 1px solid var(--color-primary-dark);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+html[data-high-contrast='true'] .official-alert-banner {
+  background: var(--color-surface);
+}
+
+::selection {
+  background: #bfe5df;
+  color: #102c36;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,65 @@
+<section class="comparison-card surface-card" aria-labelledby="candidate-comparison-title">
+  <header class="card-heading">
+    <div>
+      <p class="eyebrow">Comparação de candidaturas</p>
+      <h2 id="candidate-comparison-title">Votos válidos</h2>
+    </div>
+    <span class="round-tag">{{ snapshot().election.round }}º turno</span>
+  </header>
+
+  @if (snapshot().results.length > 0) {
+    <ol class="candidate-list">
+      @for (result of snapshot().results; track result.candidate.id) {
+        <li class="candidate-row" [style.--candidate-color]="candidateColor(result.candidate.id)">
+          <div class="candidate-avatar" aria-hidden="true">
+            @if (result.candidate.photoUrl && hasPhoto(result.candidate.id)) {
+              <img
+                [src]="result.candidate.photoUrl"
+                alt=""
+                loading="lazy"
+                (error)="markPhotoUnavailable(result.candidate.id)"
+              />
+            } @else {
+              <span>{{ initials(result.candidate.name) }}</span>
+            }
+          </div>
+
+          <div class="candidate-details">
+            <div class="candidate-heading">
+              <div class="candidate-identity">
+                <h3>{{ result.candidate.name }}</h3>
+                @if (result.candidate.party) {
+                  <p>{{ result.candidate.party }}</p>
+                }
+              </div>
+              <strong class="candidate-percent">{{ formatPercent(result.validVotePercent) }}</strong>
+            </div>
+
+            <div
+              class="candidate-progress"
+              role="progressbar"
+              [attr.aria-label]="'Votos válidos de ' + result.candidate.name"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              [attr.aria-valuenow]="result.validVotePercent"
+              [attr.aria-valuetext]="formatPercent(result.validVotePercent)"
+            >
+              <span [style.width.%]="percentWidth(result)"></span>
+            </div>
+            <p class="candidate-votes">{{ formatVotes(result.votes) }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+  } @else {
+    <p class="empty-message">Os nomes e a votação aparecerão quando estiverem disponíveis no arquivo oficial.</p>
+  }
+
+  <p class="data-mode-note">
+    @if (snapshot().source.mode === 'demonstration') {
+      Demonstração: nomes e valores sintéticos, sem relação com candidatos ou resultados reais.
+    } @else {
+      Percentuais e votos consultados no arquivo oficial do TSE.
+    }
+  </p>
+</section>

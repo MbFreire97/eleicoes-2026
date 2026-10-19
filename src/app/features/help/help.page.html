@@ -1,0 +1,91 @@
+<section class="help-page" aria-labelledby="help-title">
+  <p class="eyebrow">Orientações e acessibilidade</p>
+  <h1 id="help-title">Ajuda</h1>
+  <p class="page-description">
+    Ajuste a leitura e entenda os dados usados no acompanhamento da apuração.
+  </p>
+
+  <section class="help-card surface-card" aria-labelledby="indicators-title">
+    <h2 id="indicators-title">Como ler os indicadores</h2>
+    <dl class="explanation-list">
+      <div>
+        <dt>Votos válidos</dt>
+        <dd>Votos destinados às candidaturas e considerados válidos pelo TSE na abrangência nacional.</dd>
+      </div>
+      <div>
+        <dt>Diferença</dt>
+        <dd>Distância entre os percentuais dos dois candidatos com maior votação divulgada, em pontos percentuais.</dd>
+      </div>
+      <div>
+        <dt>Seções totalizadas</dt>
+        <dd>Percentual de seções cujo resultado entrou na totalização oficial. Isso não indica, por si só, um resultado definido.</dd>
+      </div>
+      <div>
+        <dt>Histórico da apuração</dt>
+        <dd>Mostra somente atualizações que o navegador realmente capturou. Pontos ausentes não são estimados.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="help-card settings-card surface-card" aria-labelledby="settings-title">
+    <h2 id="settings-title">Preferências de leitura</h2>
+
+    <fieldset class="font-options">
+      <legend>Tamanho do texto</legend>
+      <label>
+        <input type="radio" name="font-scale" [checked]="preferences.fontScale() === 'normal'" (change)="setFontScale('normal')" />
+        <span>Normal</span>
+      </label>
+      <label>
+        <input type="radio" name="font-scale" [checked]="preferences.fontScale() === 'large'" (change)="setFontScale('large')" />
+        <span>Grande</span>
+      </label>
+      <label>
+        <input type="radio" name="font-scale" [checked]="preferences.fontScale() === 'extra-large'" (change)="setFontScale('extra-large')" />
+        <span>Extra grande</span>
+      </label>
+    </fieldset>
+
+    <label class="preference-toggle">
+      <input type="checkbox" [checked]="preferences.highContrast()" (change)="setHighContrast($event)" />
+      <span>
+        <strong>Alto contraste</strong>
+        <small>Usa superfícies mais claras, textos escuros e contornos destacados.</small>
+      </span>
+    </label>
+
+    <label class="preference-toggle">
+      <input type="checkbox" [checked]="preferences.soundAlerts()" (change)="setSoundAlerts($event)" />
+      <span>
+        <strong>Permitir avisos sonoros</strong>
+        <small>Quando habilitada, a tela de Alertas pode ler um aviso em voz alta.</small>
+      </span>
+    </label>
+
+    <p class="persistence-note">Essas preferências são guardadas neste navegador e neste dispositivo.</p>
+  </section>
+
+  <section class="help-card source-card surface-card" aria-labelledby="source-title">
+    <h2 id="source-title">Fonte e modo dos dados</h2>
+    <p>{{ modeLabel() }}</p>
+    <p>
+      No modo oficial, os dados vêm dos arquivos JSON públicos do Tribunal Superior Eleitoral. O Brasil Decide 2026 é um projeto independente, sem afiliação ao TSE.
+    </p>
+    <a href="https://www.tse.jus.br/eleicoes/informacoes-tecnicas-sobre-a-divulgacao-de-resultados" target="_blank" rel="noreferrer">
+      Ver informações técnicas do TSE
+    </a>
+  </section>
+
+  <section class="help-card refresh-card surface-card" aria-labelledby="refresh-title">
+    <div>
+      <h2 id="refresh-title">Atualizar os dados</h2>
+      <p>A consulta automática acontece a cada 30 segundos enquanto esta página está aberta. Ela pausa quando a aba fica oculta e recomeça ao voltar. Falhas usam intervalos progressivamente maiores; arquivos ainda não publicados são consultados com menos frequência.</p>
+    </div>
+    <button type="button" [disabled]="electionStore.isLoading()" (click)="refreshData()">
+      {{ electionStore.isLoading() ? 'Atualizando…' : 'Atualizar dados agora' }}
+    </button>
+    <p class="update-message" role="status" aria-live="polite">{{ updateMessage() }}</p>
+  </section>
+
+  <a class="home-link" routerLink="/inicio">Voltar ao início</a>
+</section>
