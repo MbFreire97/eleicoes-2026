@@ -50,6 +50,8 @@ A fonte oficial é o TSE. O carregamento consulta primeiro a configuração EA11
 
 O workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) executa testes, compila os arquivos estáticos, prepara o caminho base e o fallback das rotas do Angular e publica o artefato com GitHub Actions. No repositório de destino, configure **Settings → Pages → Build and deployment → Source: GitHub Actions**. O caminho base é obtido da configuração do Pages; não é necessário salvar tokens ou credenciais no código.
 
+Se o GitHub Actions informar que o job não iniciou porque a conta está bloqueada por faturamento, solicite uma revisão em **Billing & Licensing** ou no [GitHub Support](https://support.github.com/). Após o desbloqueio, execute novamente o workflow da branch padrão; o site só será publicado quando os jobs de build e deploy terminarem com sucesso.
+
 Para simular localmente o site do repositório `MbFreire97/eleicoes-2026`:
 
 ```bash
