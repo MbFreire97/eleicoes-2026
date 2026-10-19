@@ -1,0 +1,42 @@
+<section class="indicators-grid" aria-label="Indicadores da apuração">
+  <article class="indicator-card votes-card">
+    <div class="indicator-heading">
+      <span class="indicator-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <circle cx="9" cy="8" r="3" />
+          <path d="M3 20v-1.5A4.5 4.5 0 0 1 7.5 14h3a4.5 4.5 0 0 1 4.5 4.5V20M16 5.3a3 3 0 0 1 0 5.4M18 14.2a4.4 4.4 0 0 1 3 4.3V20" />
+        </svg>
+      </span>
+      <h2>Votos válidos</h2>
+    </div>
+    <p class="indicator-value">{{ validVotesLabel() }}</p>
+    <p class="indicator-detail">{{ votesDetail() }}</p>
+  </article>
+
+  <article class="indicator-card difference-card">
+    <div class="indicator-heading">
+      <span class="indicator-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M12 3v18M5 6h14M7 6 3.5 14h7L7 6Zm10 0-3.5 8h7L17 6ZM5 21h14" />
+        </svg>
+      </span>
+      <h2>Diferença</h2>
+    </div>
+    <p class="indicator-value">{{ differenceLabel() }}</p>
+    <p class="indicator-detail">{{ difference() === null ? differenceDetail() : 'pontos percentuais' }}</p>
+  </article>
+
+  <article class="indicator-card sections-card">
+    <div class="indicator-heading">
+      <span class="indicator-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M12 2v10l9 4A10 10 0 1 1 12 2Zm3 0a9 9 0 0 1 7 10h-9V2h2Z" />
+        </svg>
+      </span>
+      <h2>Seções totalizadas</h2>
+    </div>
+    <p class="indicator-value">{{ sectionsPercentLabel() }}</p>
+    <p class="indicator-detail">{{ sectionsDetail() }}</p>
+    <p class="visually-hidden">{{ sectionsLabel() }}</p>
+  </article>
+</section>

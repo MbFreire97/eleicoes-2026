@@ -1,0 +1,28 @@
+@use './breakpoints' as breakpoints;
+
+@mixin visible-focus {
+  &:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 2px var(--color-surface);
+  }
+}
+
+@mixin surface-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+@mixin up-tablet {
+  @media (min-width: breakpoints.$tablet-up) {
+    @content;
+  }
+}
+
+@mixin up-desktop {
+  @media (min-width: breakpoints.$desktop-up) {
+    @content;
+  }
+}
