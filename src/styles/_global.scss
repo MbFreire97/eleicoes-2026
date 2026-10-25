@@ -77,12 +77,16 @@ button:disabled {
 }
 
 .official-alert-banner {
+  position: fixed;
+  z-index: 30;
+  inset-inline: 1rem;
+  inset-block-start: 4.75rem;
   display: flex;
-  width: min(100% - 2rem, 76rem);
+  width: min(100% - 2rem, 50rem);
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin: 1rem auto 0;
+  margin: auto;
   padding: 1rem;
   border: 2px solid var(--color-primary-dark);
   border-radius: var(--radius-card);

@@ -1,91 +1,93 @@
 <section class="help-page" aria-labelledby="help-title">
-  <p class="eyebrow">Orientações e acessibilidade</p>
-  <h1 id="help-title">Ajuda</h1>
-  <p class="page-description">
-    Ajuste a leitura e entenda os dados usados no acompanhamento da apuração.
-  </p>
+  <h1 id="help-title" class="visually-hidden">Ajuda e acessibilidade</h1>
 
-  <section class="help-card surface-card" aria-labelledby="indicators-title">
-    <h2 id="indicators-title">Como ler os indicadores</h2>
-    <dl class="explanation-list">
-      <div>
-        <dt>Votos válidos</dt>
-        <dd>Votos destinados às candidaturas e considerados válidos pelo TSE na abrangência nacional.</dd>
-      </div>
-      <div>
-        <dt>Diferença</dt>
-        <dd>Distância entre os percentuais dos dois candidatos com maior votação divulgada, em pontos percentuais.</dd>
-      </div>
-      <div>
-        <dt>Seções totalizadas</dt>
-        <dd>Percentual de seções cujo resultado entrou na totalização oficial. Isso não indica, por si só, um resultado definido.</dd>
-      </div>
-      <div>
-        <dt>Histórico da apuração</dt>
-        <dd>Mostra somente atualizações que o navegador realmente capturou. Pontos ausentes não são estimados.</dd>
-      </div>
-    </dl>
-  </section>
+  @if (activeTopic(); as topic) {
+    <article class="topic-view surface-card">
+      <button class="back-button" type="button" (click)="closeTopic()">
+        <span aria-hidden="true">←</span> Voltar para Ajuda
+      </button>
 
-  <section class="help-card settings-card surface-card" aria-labelledby="settings-title">
-    <h2 id="settings-title">Preferências de leitura</h2>
+      @switch (topic) {
+        @case ('tally') {
+          <h2>Como funciona a apuração?</h2>
+          <p>O painel consulta os arquivos públicos do TSE a cada 5 segundos enquanto a aba está visível.</p>
+          <p>Quando os dados mudam, a tela é atualizada e o novo ponto entra no histórico deste navegador. A aba oculta pausa as consultas; falhas ativam uma espera progressiva.</p>
+          <p><strong>Importante:</strong> liderança parcial não é resultado definido. O alerta só é emitido quando o arquivo oficial trouxer essa indicação.</p>
+        }
+        @case ('indicators') {
+          <h2>O que significam os números?</h2>
+          <dl>
+            <div><dt>Votos válidos</dt><dd>Votos destinados às candidaturas e considerados válidos na totalização.</dd></div>
+            <div><dt>Diferença</dt><dd>Distância entre os dois maiores percentuais divulgados, em pontos percentuais.</dd></div>
+            <div><dt>Seções totalizadas</dt><dd>Percentual de seções que já entrou na totalização oficial.</dd></div>
+            <div><dt>Evolução</dt><dd>Somente os pontos que este navegador realmente capturou; o painel não inventa intervalos.</dd></div>
+          </dl>
+        }
+        @case ('source') {
+          <h2>Sobre os dados do TSE</h2>
+          <p>{{ modeLabel() }}</p>
+          <p>Brasil Decide 2026 é um projeto independente, sem afiliação ao Tribunal Superior Eleitoral. O visual não substitui a fonte oficial.</p>
+          <a href="https://www.tse.jus.br/eleicoes/informacoes-tecnicas-sobre-a-divulgacao-de-resultados" target="_blank" rel="noreferrer">
+            Abrir informações técnicas do TSE
+          </a>
+        }
+      }
+    </article>
+  } @else {
+    <div class="help-dashboard">
+      <section class="font-card surface-card" aria-labelledby="font-title">
+        <div class="setting-title">
+          <span aria-hidden="true">Aa</span>
+          <h2 id="font-title">Tamanho da fonte</h2>
+        </div>
+        <fieldset class="font-options">
+          <legend class="visually-hidden">Escolha o tamanho da fonte</legend>
+          <label [class.is-selected]="preferences.fontScale() === 'normal'">
+            <input type="radio" name="font-scale" [checked]="preferences.fontScale() === 'normal'" (change)="setFontScale('normal')" />
+            <span>Normal</span>
+          </label>
+          <label [class.is-selected]="preferences.fontScale() === 'large'">
+            <input type="radio" name="font-scale" [checked]="preferences.fontScale() === 'large'" (change)="setFontScale('large')" />
+            <span>Grande</span>
+          </label>
+          <label [class.is-selected]="preferences.fontScale() === 'extra-large'">
+            <input type="radio" name="font-scale" [checked]="preferences.fontScale() === 'extra-large'" (change)="setFontScale('extra-large')" />
+            <span>Extra grande</span>
+          </label>
+        </fieldset>
+      </section>
 
-    <fieldset class="font-options">
-      <legend>Tamanho do texto</legend>
-      <label>
-        <input type="radio" name="font-scale" [checked]="preferences.fontScale() === 'normal'" (change)="setFontScale('normal')" />
-        <span>Normal</span>
-      </label>
-      <label>
-        <input type="radio" name="font-scale" [checked]="preferences.fontScale() === 'large'" (change)="setFontScale('large')" />
-        <span>Grande</span>
-      </label>
-      <label>
-        <input type="radio" name="font-scale" [checked]="preferences.fontScale() === 'extra-large'" (change)="setFontScale('extra-large')" />
-        <span>Extra grande</span>
-      </label>
-    </fieldset>
+      <section class="preferences surface-card" aria-label="Preferências de acessibilidade">
+        <label class="preference-toggle">
+          <span class="setting-icon" aria-hidden="true">◐</span>
+          <span class="setting-copy"><strong>Alto contraste</strong><small>Aumenta o contraste das cores</small></span>
+          <input type="checkbox" [checked]="preferences.highContrast()" (change)="setHighContrast($event)" />
+          <span class="toggle-track" aria-hidden="true"></span>
+        </label>
 
-    <label class="preference-toggle">
-      <input type="checkbox" [checked]="preferences.highContrast()" (change)="setHighContrast($event)" />
-      <span>
-        <strong>Alto contraste</strong>
-        <small>Usa superfícies mais claras, textos escuros e contornos destacados.</small>
-      </span>
-    </label>
+        <label class="preference-toggle">
+          <span class="setting-icon" aria-hidden="true">🔊</span>
+          <span class="setting-copy"><strong>Alertas sonoros</strong><small>Lê o aviso de resultado oficial</small></span>
+          <input type="checkbox" [checked]="preferences.soundAlerts()" (change)="setSoundAlerts($event)" />
+          <span class="toggle-track" aria-hidden="true"></span>
+        </label>
+      </section>
 
-    <label class="preference-toggle">
-      <input type="checkbox" [checked]="preferences.soundAlerts()" (change)="setSoundAlerts($event)" />
-      <span>
-        <strong>Permitir avisos sonoros</strong>
-        <small>Quando habilitada, a tela de Alertas pode ler um aviso em voz alta.</small>
-      </span>
-    </label>
+      <section class="topic-menu surface-card" aria-label="Explicações">
+        <button type="button" (click)="openTopic('tally')"><span aria-hidden="true">i</span><strong>Como funciona a apuração?</strong><b aria-hidden="true">›</b></button>
+        <button type="button" (click)="openTopic('indicators')"><span aria-hidden="true">▥</span><strong>O que significam os números?</strong><b aria-hidden="true">›</b></button>
+        <button type="button" (click)="openTopic('source')"><span aria-hidden="true">▤</span><strong>Sobre os dados do TSE</strong><b aria-hidden="true">›</b></button>
+      </section>
 
-    <p class="persistence-note">Essas preferências são guardadas neste navegador e neste dispositivo.</p>
-  </section>
-
-  <section class="help-card source-card surface-card" aria-labelledby="source-title">
-    <h2 id="source-title">Fonte e modo dos dados</h2>
-    <p>{{ modeLabel() }}</p>
-    <p>
-      No modo oficial, os dados vêm dos arquivos JSON públicos do Tribunal Superior Eleitoral. O Brasil Decide 2026 é um projeto independente, sem afiliação ao TSE.
-    </p>
-    <a href="https://www.tse.jus.br/eleicoes/informacoes-tecnicas-sobre-a-divulgacao-de-resultados" target="_blank" rel="noreferrer">
-      Ver informações técnicas do TSE
-    </a>
-  </section>
-
-  <section class="help-card refresh-card surface-card" aria-labelledby="refresh-title">
-    <div>
-      <h2 id="refresh-title">Atualizar os dados</h2>
-      <p>A consulta automática acontece a cada 5 segundos enquanto esta página está aberta. Ela pausa quando a aba fica oculta e recomeça ao voltar. Falhas usam intervalos progressivamente maiores; arquivos ainda não publicados são consultados com menos frequência.</p>
+      <button class="refresh-button" type="button" [disabled]="electionStore.isLoading()" (click)="refreshData()">
+        <span aria-hidden="true">⟳</span>
+        {{ electionStore.isLoading() ? 'Atualizando…' : 'Atualizar dados agora' }}
+        <b aria-hidden="true">›</b>
+      </button>
     </div>
-    <button type="button" [disabled]="electionStore.isLoading()" (click)="refreshData()">
-      {{ electionStore.isLoading() ? 'Atualizando…' : 'Atualizar dados agora' }}
-    </button>
-    <p class="update-message" role="status" aria-live="polite">{{ updateMessage() }}</p>
-  </section>
+  }
 
-  <a class="home-link" routerLink="/inicio">Voltar ao início</a>
+  @if (updateMessage()) {
+    <p class="update-message" role="status" aria-live="polite">{{ updateMessage() }}</p>
+  }
 </section>
