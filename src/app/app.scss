@@ -1,9 +1,10 @@
-@use '../styles/mixins' as mixins;
-
 :host {
   display: flex;
-  min-height: 100svh;
+  height: 100svh;
+  height: 100dvh;
+  min-height: 0;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .skip-link {
@@ -26,6 +27,7 @@
 .site-header {
   position: relative;
   z-index: 10;
+  flex: 0 0 auto;
   color: var(--color-header-text);
   background: var(--color-header);
   box-shadow: 0 0.25rem 1rem rgb(9 36 47 / 16%);
@@ -41,7 +43,7 @@
 .header-inner {
   display: flex;
   width: min(100% - 2rem, 76rem);
-  min-height: 6rem;
+  min-height: 4.75rem;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -59,8 +61,8 @@
 
 .brand-mark {
   display: grid;
-  width: 3rem;
-  height: 3rem;
+  width: 2.65rem;
+  height: 2.65rem;
   flex: 0 0 auto;
   place-items: center;
   color: #f4b55f;
@@ -97,91 +99,25 @@
   line-height: 1.2;
 }
 
-.menu-toggle {
-  display: grid;
-  width: 3rem;
-  height: 3rem;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid rgb(255 255 255 / 28%);
-  border-radius: 0.75rem;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-}
-
-.menu-toggle svg {
-  width: 1.65rem;
-  height: 1.65rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-width: 2;
-}
-
-.menu-toggle:hover,
-.compact-menu-link:hover {
-  background: var(--color-hover-overlay);
-}
-
-.desktop-nav {
-  display: none;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.desktop-nav-link,
-.compact-menu-link {
-  display: inline-flex;
-  min-height: 3rem;
-  align-items: center;
-  justify-content: center;
-  padding-inline: 1rem;
-  border-radius: 0.75rem;
-  color: inherit;
-  font-size: var(--font-size-control);
-  font-weight: 650;
-  text-decoration: none;
-}
-
-.desktop-nav-link.is-active {
-  background: var(--color-primary-dark);
-  color: #fff;
-}
-
-.compact-menu {
-  position: absolute;
-  inset-block-start: calc(100% - 0.3rem);
-  inset-inline: 0;
-  display: grid;
-  gap: 0.25rem;
-  padding: 0.75rem 1rem 1rem;
-  border-block-start: 1px solid rgb(255 255 255 / 14%);
-  background: var(--color-header);
-  box-shadow: 0 0.75rem 1rem rgb(9 36 47 / 18%);
-}
-
-.compact-menu-link {
-  justify-content: flex-start;
-}
-
-.compact-menu-link.is-active {
-  background: rgb(19 143 134 / 35%);
-}
-
 .page-container {
   width: min(100%, 76rem);
-  flex: 1 0 auto;
+  min-height: 0;
+  flex: 1 1 auto;
   margin-inline: auto;
-  padding: 1.25rem 1rem calc(6.5rem + env(safe-area-inset-bottom));
+  padding: 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.page-container::-webkit-scrollbar {
+  display: none;
 }
 
 .bottom-nav {
-  position: fixed;
   z-index: 9;
-  inset-inline: 0;
-  inset-block-end: 0;
   display: grid;
+  flex: 0 0 auto;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   padding: 0.45rem max(0.5rem, env(safe-area-inset-left)) calc(0.45rem + env(safe-area-inset-bottom));
   border-block-start: 1px solid rgb(255 255 255 / 12%);
@@ -224,9 +160,9 @@
   color: #fff;
 }
 
-@include mixins.up-desktop {
+@media (min-width: 54rem) {
   .header-inner {
-    min-height: 6.5rem;
+    min-height: 5rem;
   }
 
   .brand-title {
@@ -237,17 +173,12 @@
     font-size: 1rem;
   }
 
-  .desktop-nav {
-    display: flex;
-  }
-
-  .menu-toggle,
-  .compact-menu,
-  .bottom-nav {
-    display: none;
-  }
-
   .page-container {
-    padding: 2rem 1.5rem 3rem;
+    padding: 1.5rem;
+  }
+
+  .bottom-nav {
+    grid-template-columns: repeat(4, minmax(8rem, 12rem));
+    justify-content: center;
   }
 }
