@@ -2,7 +2,7 @@
 
 Dashboard independente para acompanhar informações da eleição presidencial brasileira. O projeto não é afiliado ao Tribunal Superior Eleitoral (TSE).
 
-> **Estado atual:** a aplicação consulta o TSE no segundo turno de 2026. A consulta se repete a cada 30 segundos enquanto a aba está visível, pausa em segundo plano e aumenta o intervalo após falhas ou arquivos ainda não publicados. O histórico e os alertas oficiais ficam guardados localmente no navegador. O modo de demonstração usa dados sintéticos e é identificado na interface.
+> **Estado atual:** a aplicação consulta o TSE no segundo turno de 2026. A consulta se repete a cada 5 segundos enquanto a aba está visível, pausa em segundo plano e aumenta o intervalo após falhas ou arquivos ainda não publicados. O histórico e os alertas oficiais ficam guardados localmente no navegador. O modo de demonstração usa dados sintéticos e é identificado na interface.
 
 ## Requisitos
 

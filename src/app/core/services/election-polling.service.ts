@@ -3,7 +3,7 @@ import { DestroyRef, inject, Injectable } from '@angular/core';
 import type { ElectionRefreshOutcome } from './election-store';
 import { ElectionStore } from './election-store';
 
-const BASE_INTERVAL_MS = 30_000;
+const BASE_INTERVAL_MS = 5_000;
 const MAX_BACKOFF_MS = 5 * 60_000;
 
 @Injectable({ providedIn: 'root' })

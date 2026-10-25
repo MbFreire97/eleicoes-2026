@@ -41,7 +41,7 @@ describe('ElectionPollingService', () => {
     vi.useRealTimers();
   });
 
-  it('polls every 30 seconds and keeps the same visible snapshot when values did not change', async () => {
+  it('polls every 5 seconds and keeps the same visible snapshot when values did not change', async () => {
     vi.useFakeTimers();
     let requests = 0;
     configure({
@@ -57,7 +57,7 @@ describe('ElectionPollingService', () => {
     await flushMicrotasks();
     const originalSnapshot = store.snapshot();
 
-    await vi.advanceTimersByTimeAsync(29_999);
+    await vi.advanceTimersByTimeAsync(4_999);
     expect(requests).toBe(1);
     await vi.advanceTimersByTimeAsync(1);
     expect(requests).toBe(2);
@@ -84,9 +84,9 @@ describe('ElectionPollingService', () => {
     await flushMicrotasks();
     expect(requests).toBe(1);
 
-    await vi.advanceTimersByTimeAsync(30_000);
+    await vi.advanceTimersByTimeAsync(5_000);
     expect(requests).toBe(2);
-    await vi.advanceTimersByTimeAsync(59_999);
+    await vi.advanceTimersByTimeAsync(9_999);
     expect(requests).toBe(2);
     await vi.advanceTimersByTimeAsync(1);
     expect(requests).toBe(3);

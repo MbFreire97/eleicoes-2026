@@ -82,7 +82,7 @@ describe('App', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
     const skipLink = compiled.querySelector<HTMLAnchorElement>('.skip-link');
-    const menuButton = compiled.querySelector<HTMLButtonElement>('.menu-toggle');
+    const bottomNavigation = compiled.querySelector<HTMLElement>('.bottom-nav');
     const fontOptions = compiled.querySelectorAll<HTMLInputElement>('input[name="font-scale"]');
     const accessibilityToggles = compiled.querySelectorAll<HTMLInputElement>(
       '.preference-toggle input[type="checkbox"]',
@@ -90,15 +90,10 @@ describe('App', () => {
 
     expect(skipLink?.getAttribute('href')).toBe('#conteudo');
     expect(compiled.querySelector('#conteudo')).not.toBeNull();
-    expect(menuButton?.getAttribute('aria-label')).toBe('Abrir menu');
+    expect(bottomNavigation?.getAttribute('aria-label')).toBe('Navegação principal');
     expect(fontOptions).toHaveLength(3);
     expect([...fontOptions].every((input) => input.closest('label')?.textContent?.trim())).toBe(true);
     expect(accessibilityToggles).toHaveLength(2);
     expect([...accessibilityToggles].every((input) => input.closest('label')?.textContent?.trim())).toBe(true);
-
-    menuButton?.click();
-    fixture.detectChanges();
-    expect(menuButton?.getAttribute('aria-expanded')).toBe('true');
-    expect(compiled.querySelector('#compact-menu')).not.toBeNull();
   });
 });

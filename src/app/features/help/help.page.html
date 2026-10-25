@@ -79,7 +79,7 @@
   <section class="help-card refresh-card surface-card" aria-labelledby="refresh-title">
     <div>
       <h2 id="refresh-title">Atualizar os dados</h2>
-      <p>A consulta automática acontece a cada 30 segundos enquanto esta página está aberta. Ela pausa quando a aba fica oculta e recomeça ao voltar. Falhas usam intervalos progressivamente maiores; arquivos ainda não publicados são consultados com menos frequência.</p>
+      <p>A consulta automática acontece a cada 5 segundos enquanto esta página está aberta. Ela pausa quando a aba fica oculta e recomeça ao voltar. Falhas usam intervalos progressivamente maiores; arquivos ainda não publicados são consultados com menos frequência.</p>
     </div>
     <button type="button" [disabled]="electionStore.isLoading()" (click)="refreshData()">
       {{ electionStore.isLoading() ? 'Atualizando…' : 'Atualizar dados agora' }}

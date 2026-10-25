@@ -15,57 +15,7 @@
       </span>
     </a>
 
-    <nav class="desktop-nav" aria-label="Navegação principal">
-      @for (item of navigationItems; track item.path) {
-        <a
-          class="nav-link desktop-nav-link"
-          [routerLink]="item.path"
-          routerLinkActive="is-active"
-          ariaCurrentWhenActive="page"
-          [routerLinkActiveOptions]="{ exact: true }"
-          (click)="closeMenu()"
-        >
-          {{ item.label }}
-        </a>
-      }
-    </nav>
-
-    <button
-      class="menu-toggle"
-      type="button"
-      [attr.aria-expanded]="menuOpen()"
-      aria-controls="compact-menu"
-      [attr.aria-label]="menuOpen() ? 'Fechar menu' : 'Abrir menu'"
-      (click)="toggleMenu()"
-    >
-      @if (menuOpen()) {
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="m6 6 12 12M18 6 6 18" />
-        </svg>
-      } @else {
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M3 6h18M3 12h18M3 18h18" />
-        </svg>
-      }
-    </button>
   </div>
-
-  @if (menuOpen()) {
-    <nav id="compact-menu" class="compact-menu" aria-label="Menu de navegação">
-      @for (item of navigationItems; track item.path) {
-        <a
-          class="compact-menu-link"
-          [routerLink]="item.path"
-          routerLinkActive="is-active"
-          ariaCurrentWhenActive="page"
-          [routerLinkActiveOptions]="{ exact: true }"
-          (click)="closeMenu()"
-        >
-          {{ item.label }}
-        </a>
-      }
-    </nav>
-  }
 </header>
 
 @if (latestNotification(); as alert) {
@@ -79,7 +29,7 @@
   </aside>
 }
 
-<main id="conteudo" class="page-container" tabindex="-1">
+<main #pageContainer id="conteudo" class="page-container" tabindex="-1">
   <router-outlet />
 </main>
 
@@ -91,7 +41,6 @@
       routerLinkActive="is-active"
       ariaCurrentWhenActive="page"
       [routerLinkActiveOptions]="{ exact: true }"
-      (click)="closeMenu()"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         @switch (item.icon) {
