@@ -1,86 +1,110 @@
-<section class="charts-grid" [class.is-detailed]="detailed()" aria-label="Gráficos da apuração">
-  <article class="chart-card surface-card" aria-labelledby="votes-chart-title">
-    <header class="chart-heading">
-      <div>
-        <p class="eyebrow">Comparação</p>
-        <h2 id="votes-chart-title">Votos apurados</h2>
-      </div>
-      <span class="chart-symbol bars-symbol" aria-hidden="true">▥</span>
-    </header>
-    <p class="chart-explanation" id="votes-chart-description">
-      Percentuais de votos válidos por candidatura, com o número apresentado também em texto.
-    </p>
+<section class="charts-panel" aria-label="Gráficos da apuração">
+  <div class="chart-tabs" role="tablist" aria-label="Escolha do gráfico">
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="activeView() === 'votes'"
+      aria-controls="votes-panel"
+      [class.is-active]="activeView() === 'votes'"
+      (click)="selectView('votes')"
+    >
+      Votos
+    </button>
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="activeView() === 'timeline'"
+      aria-controls="timeline-panel"
+      [class.is-active]="activeView() === 'timeline'"
+      (click)="selectView('timeline')"
+    >
+      Evolução
+    </button>
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="activeView() === 'sections'"
+      aria-controls="sections-panel"
+      [class.is-active]="activeView() === 'sections'"
+      (click)="selectView('sections')"
+    >
+      Seções
+    </button>
+  </div>
 
-    @if (hasVotePercentages()) {
-      <div class="chart-canvas vote-chart" role="img" aria-labelledby="votes-chart-title votes-chart-description" [style.height]="voteBarHeight()" echarts [options]="voteBarOptions()"></div>
-      <ul class="chart-data-list">
-        @for (result of rankedCandidates(); track result.candidate.id) {
-          <li>
-            <span class="legend-dot" [style.backgroundColor]="candidateColor(result)" aria-hidden="true"></span>
-            <span>{{ result.candidate.name }}: {{ formatPercent(result.validVotePercent) }} · {{ formatNumber(result.votes) }} votos</span>
-          </li>
-        }
-      </ul>
-    } @else {
-      <p class="chart-empty">Os percentuais aparecerão quando o TSE iniciar a divulgação dos votos.</p>
-    }
-  </article>
-
-  <article class="chart-card surface-card" aria-labelledby="timeline-chart-title">
-    <header class="chart-heading">
-      <div>
-        <p class="eyebrow">Evolução</p>
-        <h2 id="timeline-chart-title">Evolução da apuração</h2>
-      </div>
-      <span class="chart-symbol line-symbol" aria-hidden="true">⌁</span>
-    </header>
-    <p class="chart-explanation" id="timeline-chart-description">
-      Cada ponto representa uma atualização capturada. Nenhum intervalo é interpolado.
-    </p>
-
-    @if (hasHistory()) {
-      <div class="chart-canvas timeline-chart" role="img" aria-labelledby="timeline-chart-title timeline-chart-description" echarts [options]="timelineOptions()"></div>
-      <ul class="chart-data-list">
-        @for (result of snapshot().results; track result.candidate.id) {
-          <li>
-            <span class="legend-dot" [style.backgroundColor]="candidateColor(result)" aria-hidden="true"></span>
-            <span>{{ result.candidate.name }}: {{ latestHistoryValue(result.candidate.id) }} na atualização mais recente.</span>
-          </li>
-        }
-      </ul>
-      @if (snapshot().source.mode === 'demonstration') {
-        <p class="chart-footnote">Série de demonstração com dados sintéticos.</p>
-      } @else {
-        <p class="chart-footnote">Histórico guardado neste navegador; ele inclui apenas atualizações capturadas enquanto o painel esteve aberto.</p>
-      }
-    } @else {
-      <p class="chart-empty">Ainda não há histórico capturado neste navegador. Os dados oficiais atuais não são interpolados.</p>
-    }
-  </article>
-
-  <article class="chart-card surface-card" aria-labelledby="sections-chart-title">
-    <header class="chart-heading">
-      <div>
-        <p class="eyebrow">Progresso</p>
-        <h2 id="sections-chart-title">Seções totalizadas</h2>
-      </div>
-      <span class="chart-symbol pie-symbol" aria-hidden="true">◔</span>
-    </header>
-    <p class="chart-explanation" id="sections-chart-description">
-      Progresso nacional da totalização conforme a quantidade de seções publicada pelo TSE.
-    </p>
-
-    @if (hasSectionProgress()) {
-      <div class="section-chart-wrap">
-        <div class="chart-canvas section-chart" role="img" aria-labelledby="sections-chart-title sections-chart-description" echarts [options]="sectionOptions()"></div>
-        <div class="section-chart-center" aria-hidden="true">
-          <strong>{{ formatPercent(snapshot().totals.countedSectionsPercent) }}</strong>
-          <span>das seções</span>
+  @if (activeView() === 'votes') {
+    <article id="votes-panel" class="chart-card surface-card" role="tabpanel" aria-labelledby="votes-chart-title">
+      <header class="chart-heading">
+        <div>
+          <h2 id="votes-chart-title">Votos apurados</h2>
+          <p id="votes-chart-description">Percentual de votos válidos</p>
         </div>
-      </div>
-      <p class="chart-data-summary">{{ sectionSummary() }}</p>
-    } @else {
-      <p class="chart-empty">O progresso será exibido quando a quantidade de seções estiver disponível.</p>
-    }
-  </article>
+        <span class="chart-symbol" aria-hidden="true">▥</span>
+      </header>
+
+      @if (hasVotePercentages()) {
+        <div class="chart-canvas" role="img" aria-labelledby="votes-chart-title votes-chart-description" echarts [options]="voteBarOptions()"></div>
+        <ul class="chart-data-list">
+          @for (result of rankedCandidates(); track result.candidate.id) {
+            <li>
+              <span class="legend-dot" [style.backgroundColor]="candidateColor(result)" aria-hidden="true"></span>
+              <span><strong>{{ result.candidate.name }}</strong> {{ formatPercent(result.validVotePercent) }} · {{ formatNumber(result.votes) }} votos</span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="chart-empty">Os percentuais aparecerão quando o TSE iniciar a divulgação dos votos.</p>
+      }
+    </article>
+  } @else if (activeView() === 'timeline') {
+    <article id="timeline-panel" class="chart-card surface-card" role="tabpanel" aria-labelledby="timeline-chart-title">
+      <header class="chart-heading">
+        <div>
+          <h2 id="timeline-chart-title">Evolução da apuração</h2>
+          <p id="timeline-chart-description">Somente atualizações realmente capturadas</p>
+        </div>
+        <span class="chart-symbol" aria-hidden="true">⌁</span>
+      </header>
+
+      @if (hasHistory()) {
+        <div class="chart-canvas" role="img" aria-labelledby="timeline-chart-title timeline-chart-description" echarts [options]="timelineOptions()"></div>
+        <ul class="chart-data-list">
+          @for (result of snapshot().results; track result.candidate.id) {
+            <li>
+              <span class="legend-dot" [style.backgroundColor]="candidateColor(result)" aria-hidden="true"></span>
+              <span><strong>{{ result.candidate.name }}</strong> {{ latestHistoryValue(result.candidate.id) }}</span>
+            </li>
+          }
+        </ul>
+        <p class="chart-footnote">
+          {{ snapshot().source.mode === 'demonstration' ? 'Série de demonstração com dados sintéticos.' : 'Histórico guardado neste navegador, sem estimar pontos ausentes.' }}
+        </p>
+      } @else {
+        <p class="chart-empty">Ainda não há histórico capturado neste navegador. Nenhum ponto é estimado.</p>
+      }
+    </article>
+  } @else {
+    <article id="sections-panel" class="chart-card surface-card" role="tabpanel" aria-labelledby="sections-chart-title">
+      <header class="chart-heading">
+        <div>
+          <h2 id="sections-chart-title">Seções totalizadas</h2>
+          <p id="sections-chart-description">Progresso nacional publicado pelo TSE</p>
+        </div>
+        <span class="chart-symbol" aria-hidden="true">◔</span>
+      </header>
+
+      @if (hasSectionProgress()) {
+        <div class="section-chart-wrap">
+          <div class="chart-canvas" role="img" aria-labelledby="sections-chart-title sections-chart-description" echarts [options]="sectionOptions()"></div>
+          <div class="section-chart-center" aria-hidden="true">
+            <strong>{{ formatPercent(snapshot().totals.countedSectionsPercent) }}</strong>
+            <span>das seções</span>
+          </div>
+        </div>
+        <p class="chart-data-summary">{{ sectionSummary() }}</p>
+      } @else {
+        <p class="chart-empty">O progresso aparecerá quando a quantidade de seções estiver disponível.</p>
+      }
+    </article>
+  }
 </section>

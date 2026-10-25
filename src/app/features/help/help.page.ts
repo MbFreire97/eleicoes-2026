@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { APP_ENVIRONMENT } from '../../core/config/app-environment';
 import { AccessibilityPreferences, type FontScale } from '../../core/services/accessibility-preferences';
 import { ElectionPollingService } from '../../core/services/election-polling.service';
 import { ElectionStore } from '../../core/services/election-store';
 
+type HelpTopic = 'tally' | 'indicators' | 'source';
+
 @Component({
   selector: 'app-help-page',
-  imports: [RouterLink],
   templateUrl: './help.page.html',
   styleUrl: './help.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +18,7 @@ export class HelpPage {
   protected readonly electionStore = inject(ElectionStore);
   protected readonly preferences = inject(AccessibilityPreferences);
   protected readonly updateMessage = signal('');
+  protected readonly activeTopic = signal<HelpTopic | null>(null);
   protected readonly modeLabel = computed(() =>
     this.environment.dataMode === 'official'
       ? 'Dados oficiais selecionados. A aplicação consulta os arquivos publicados pelo TSE.'
@@ -52,5 +53,13 @@ export class HelpPage {
         ? 'Consulta concluída. Os dados e o horário oficial são apresentados separadamente.'
         : 'Não foi possível consultar os dados. A próxima tentativa automática seguirá o intervalo de espera.',
     );
+  }
+
+  protected openTopic(topic: HelpTopic): void {
+    this.activeTopic.set(topic);
+  }
+
+  protected closeTopic(): void {
+    this.activeTopic.set(null);
   }
 }

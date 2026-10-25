@@ -18,7 +18,7 @@ export class ElectionIndicatorsComponent {
 
   protected readonly validVotesLabel = computed(() => {
     const value = this.snapshot().totals.validVotes;
-    return value === null ? 'Aguardando dados' : INTEGER_FORMAT.format(value);
+    return value === null ? '—' : INTEGER_FORMAT.format(value);
   });
 
   protected readonly difference = computed(() => {
@@ -35,7 +35,7 @@ export class ElectionIndicatorsComponent {
 
   protected readonly differenceLabel = computed(() => {
     const value = this.difference();
-    return value === null ? 'Aguardando dados' : PERCENT_FORMAT.format(value);
+    return value === null ? '—' : PERCENT_FORMAT.format(value);
   });
 
   protected readonly sectionsPercentLabel = computed(() => {

@@ -1,90 +1,66 @@
 <section class="home-page" aria-labelledby="home-title">
-  <div class="page-intro">
-    <p class="eyebrow">Acompanhamento eleitoral</p>
-    <h1 id="home-title">Apuração presidencial 2026</h1>
-    <p>Confira os dados e o estado da totalização com a origem sempre indicada.</p>
-  </div>
-
   @if (snapshot(); as election) {
     @if (errorMessage(); as requestError) {
-      <p class="connection-error" role="alert">{{ requestError }} A tela ainda mostra a última consulta bem-sucedida.</p>
+      <p class="connection-error" role="alert">{{ requestError }} A tela mantém a última consulta válida.</p>
     }
 
-    <section
-      id="status-title"
-      class="status-card"
-      [class.status-card--waiting]="election.status === 'waiting'"
-      [class.status-card--unavailable]="election.status === 'unavailable'"
-      [class.status-card--defined]="election.status === 'mathematically-defined' || election.status === 'final'"
+    <article
+      class="overview-card surface-card"
+      [class.is-waiting]="election.status === 'waiting'"
+      [class.is-unavailable]="election.status === 'unavailable'"
       aria-live="polite"
     >
-      <span class="status-symbol" aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z" />
-          <path d="M12 7v5l3 2" />
+      <div class="status-strip">
+        <span class="status-dot" aria-hidden="true"></span>
+        <div>
+          <h2 id="status-title">{{ statusTitle() }}</h2>
+          <p>{{ sourceLabel() }}</p>
+        </div>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5" />
         </svg>
-      </span>
-      <div class="status-copy">
-        <p class="status-label">{{ sourceLabel() }}</p>
-        <h2>{{ statusTitle() }}</h2>
-        <p>{{ statusMessage() }}</p>
       </div>
-    </section>
 
-    <section class="update-line" aria-label="Horários dos dados">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 7v5l3 2" />
-      </svg>
-      <div>
-        <p><strong>Consulta bem-sucedida:</strong> <time>{{ lastQueryLabel() }}</time></p>
-        <p><strong>Atualização publicada pelo TSE:</strong> <time>{{ officialUpdateLabel() }}</time></p>
-        @if (election.officialGenerationId) {
-          <p><strong>Identificador da geração TSE:</strong> {{ election.officialGenerationId }}</p>
-        }
+      <div class="election-summary">
+        <div class="election-heading">
+          <h1 id="home-title">{{ election.election.round }}º turno – Presidente</h1>
+          <span aria-label="Abrangência nacional">BR</span>
+        </div>
+        <div class="summary-values">
+          <div>
+            <strong>{{ sectionsPercentLabel() }}</strong>
+            <span>das seções totalizadas</span>
+          </div>
+          <div class="last-update">
+            <span>Última atualização</span>
+            <strong>{{ officialUpdateTime() }}</strong>
+            <span>{{ officialUpdateDate() }}</span>
+          </div>
+        </div>
       </div>
-    </section>
 
-    <article class="election-context surface-card">
-      <div>
-        <p class="context-label">Eleição acompanhada</p>
-        <h2>{{ election.election.name }} · {{ election.election.year }}</h2>
-        <p>{{ election.election.round }}º turno · {{ election.source.label }}</p>
-      </div>
-      <a href="https://resultados.tse.jus.br/" target="_blank" rel="noreferrer">
-        Consultar o portal oficial do TSE
-      </a>
+      <p class="visually-hidden">{{ statusMessage() }} Consulta bem-sucedida: {{ lastQueryLabel() }}. Atualização oficial: {{ officialUpdateLabel() }}.</p>
     </article>
 
     <app-candidate-comparison [snapshot]="election" />
     <app-election-indicators [snapshot]="election" />
-    <app-election-charts [snapshot]="election" />
 
-    <aside class="independence-note" aria-labelledby="independence-title">
-      <span class="independence-icon" aria-hidden="true">i</span>
-      <div>
-        <h2 id="independence-title">Projeto independente</h2>
-        <p>
-          Brasil Decide 2026 não é afiliado ao TSE. Os dados oficiais são reproduzidos a partir dos
-          arquivos publicados pelo Tribunal; a interface não declara vencedor com base em liderança parcial.
-        </p>
-      </div>
-    </aside>
+    <p class="independence-note">
+      Projeto independente. Liderança parcial não significa resultado definido.
+    </p>
   } @else if (isLoading()) {
-    <section class="status-card status-card--waiting" aria-live="polite" aria-busy="true">
-      <span class="status-symbol" aria-hidden="true">…</span>
-      <div class="status-copy">
-        <p class="status-label">Dados oficiais do TSE</p>
-        <h2>Consultando a apuração</h2>
-        <p>Buscando a configuração da eleição e a última totalização publicada.</p>
+    <section class="state-card surface-card" aria-live="polite" aria-busy="true">
+      <span class="loading-mark" aria-hidden="true"></span>
+      <div>
+        <h1 id="home-title">Consultando a apuração</h1>
+        <p>Buscando a última totalização publicada.</p>
       </div>
     </section>
   } @else {
-    <section class="status-card status-card--unavailable" aria-live="polite">
-      <span class="status-symbol" aria-hidden="true">!</span>
-      <div class="status-copy">
-        <p class="status-label">Dados oficiais do TSE</p>
-        <h2>Apuração temporariamente indisponível</h2>
+    <section class="state-card surface-card state-card--error" aria-live="polite">
+      <strong aria-hidden="true">!</strong>
+      <div>
+        <h1 id="home-title">Dados indisponíveis</h1>
         <p>{{ errorMessage() ?? 'Não há dados para apresentar neste momento.' }}</p>
       </div>
     </section>

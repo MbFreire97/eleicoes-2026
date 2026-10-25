@@ -1,63 +1,37 @@
-<section class="feature-page" aria-labelledby="alerts-title">
-  <p class="eyebrow">Avisos e atualizações</p>
-  <h1 id="alerts-title">Alertas</h1>
-  <p class="page-description">
-    Veja o estado atual da eleição e os registros reconhecidos nesta sessão. Uma liderança parcial não define um resultado.
-  </p>
+<section class="alerts-page" aria-labelledby="alerts-title">
+  <h1 id="alerts-title" class="visually-hidden">Alertas da apuração</h1>
 
   @if (snapshot(); as election) {
-    <article class="current-status surface-card" aria-live="polite">
-      <p class="status-label">{{ election.source.label }}</p>
-      <h2>{{ statusTitle() }}</h2>
-      <p>{{ election.statusMessage }}</p>
-      @if (election.source.mode === 'official' && (election.status === 'mathematically-defined' || election.status === 'final')) {
-        <div class="defined-result" role="status">
-          <strong>Indicação oficial do TSE recebida.</strong>
-          <span>
-            @if (election.officialDecision === 'second-round') {
-              O TSE indica disputa em segundo turno.
-            } @else if (election.officialDecision === 'elected') {
-              O TSE indica eleição matematicamente definida.
-            } @else {
-              A totalização final foi publicada pelo TSE.
-            }
-          </span>
-        </div>
-      } @else if (election.source.mode === 'demonstration' && (election.status === 'mathematically-defined' || election.status === 'final')) {
-        <div class="defined-result" role="status">
-          <strong>Estado apenas demonstrativo.</strong>
-          <span>Esta amostra sintética não representa resultado eleitoral real.</span>
-        </div>
-      }
-      <a routerLink="/inicio" fragment="status-title">Ver detalhes do estado atual</a>
+    <article class="current-status" aria-live="polite">
+      <span class="status-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" />
+        </svg>
+      </span>
+      <div>
+        <p class="status-kicker">{{ election.source.label }}</p>
+        <h2>{{ statusHeadline() }}</h2>
+        <p>{{ election.statusMessage ?? 'O painel avisará somente quando houver uma indicação oficial do TSE.' }}</p>
+      </div>
     </article>
 
     <section class="event-section" aria-labelledby="events-title">
       <div class="section-heading">
-        <div>
-          <p class="eyebrow">Nesta sessão</p>
-          <h2 id="events-title">Histórico de eventos</h2>
-        </div>
+        <h2 id="events-title">Últimos eventos</h2>
         @if (election.source.mode === 'demonstration') {
-          <span class="simulation-badge">Demonstração</span>
+          <span>Demonstração</span>
         }
       </div>
 
-      @if (events().length > 0) {
+      @if (visibleEvents().length > 0) {
         <ol class="event-list">
-          @for (event of events(); track event.id) {
-            <li class="event-card surface-card">
+          @for (event of visibleEvents(); track event.id) {
+            <li>
+              <time [attr.datetime]="event.occurredAt.toISOString()">{{ formatTime(event.occurredAt) }}</time>
               <span class="event-marker" aria-hidden="true"></span>
-              <div class="event-content">
+              <div>
                 <h3>{{ event.title }}</h3>
-                <time [attr.datetime]="event.occurredAt.toISOString()">{{ formatDate(event.occurredAt) }}</time>
-                <details>
-                  <summary>Ver detalhes</summary>
-                  <p>{{ event.details }}</p>
-                </details>
-                <button class="secondary-button" type="button" (click)="repeatAlert(event.details)">
-                  Ouvir alerta novamente
-                </button>
+                <p>{{ event.details }}</p>
               </div>
             </li>
           }
@@ -69,15 +43,12 @@
           } @else if (errorMessage()) {
             <p>{{ errorMessage() }}</p>
           } @else {
-            <p>Nenhum evento oficial foi reconhecido nesta sessão.</p>
-            <p>Novos alertas eleitorais serão registrados quando houver uma atualização oficial relevante.</p>
+            <p>Nenhum evento oficial relevante foi registrado.</p>
+            <small>As atualizações aparecerão aqui quando houver dados publicados.</small>
           }
-          <button class="secondary-button" type="button" disabled>Ouvir alerta novamente</button>
         </div>
       }
     </section>
-
-    <p class="announcement" aria-live="polite" role="status">{{ announcement() }}</p>
   } @else {
     <p class="state-message" role="status">
       {{ isLoading() ? 'Consultando os dados da eleição...' : errorMessage() }}

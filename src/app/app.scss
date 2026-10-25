@@ -34,16 +34,13 @@
 }
 
 .site-header::after {
-  display: block;
-  height: 0.3rem;
-  background: linear-gradient(105deg, var(--color-primary) 0 72%, var(--color-accent) 72% 100%);
-  content: '';
+  content: none;
 }
 
 .header-inner {
   display: flex;
-  width: min(100% - 2rem, 76rem);
-  min-height: 4.75rem;
+  width: min(100% - 1.5rem, 52rem);
+  min-height: 4.25rem;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -59,29 +56,9 @@
   text-decoration: none;
 }
 
-.brand-mark {
-  display: grid;
-  width: 2.65rem;
-  height: 2.65rem;
-  flex: 0 0 auto;
-  place-items: center;
-  color: #f4b55f;
-}
-
-.brand-mark svg {
-  width: 100%;
-  height: 100%;
-}
-
-.brand-copy {
-  display: grid;
-  min-width: 0;
-  gap: 0.2rem;
-}
-
 .brand-title {
   overflow: hidden;
-  font-size: clamp(1.18rem, 5vw, 1.75rem);
+  font-size: clamp(1.3rem, 6vw, 1.8rem);
   font-weight: 750;
   letter-spacing: -0.035em;
   line-height: 1.05;
@@ -93,25 +70,37 @@
   color: #f4b55f;
 }
 
-.brand-subtitle {
-  color: #e0e9ec;
-  font-size: 1rem;
-  line-height: 1.2;
+.settings-link {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.settings-link:hover {
+  background: var(--color-hover-overlay);
+}
+
+.settings-link svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 
 .page-container {
-  width: min(100%, 76rem);
+  width: min(100%, 52rem);
   min-height: 0;
   flex: 1 1 auto;
   margin-inline: auto;
-  padding: 1rem;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: none;
-}
-
-.page-container::-webkit-scrollbar {
-  display: none;
+  padding: 0.75rem;
+  overflow: hidden;
 }
 
 .bottom-nav {
@@ -128,14 +117,14 @@
 .bottom-nav-link {
   display: flex;
   min-width: 0;
-  min-height: 3.5rem;
+  min-height: 3.75rem;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
   border-radius: 0.85rem;
   color: #f3f7f8;
-  font-size: var(--font-size-control);
+  font-size: 0.8rem;
   font-weight: 600;
   text-decoration: none;
 }
@@ -156,25 +145,21 @@
 }
 
 .bottom-nav-link.is-active {
-  background: var(--color-primary-dark);
-  color: #fff;
+  background: rgb(19 143 134 / 20%);
+  color: #35d6ca;
 }
 
 @media (min-width: 54rem) {
   .header-inner {
-    min-height: 5rem;
+    min-height: 4.5rem;
   }
 
   .brand-title {
     font-size: 1.8rem;
   }
 
-  .brand-subtitle {
-    font-size: 1rem;
-  }
-
   .page-container {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   .bottom-nav {

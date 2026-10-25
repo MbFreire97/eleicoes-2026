@@ -1,17 +1,22 @@
 .indicators-grid {
   display: grid;
-  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
 }
 
 .indicator-card {
   display: grid;
   min-width: 0;
-  gap: 0.45rem;
-  padding: 1rem;
+  align-content: center;
+  justify-items: center;
+  gap: 0.2rem;
+  min-height: 5.9rem;
+  padding: 0.5rem 0.3rem;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  border-radius: 1rem;
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
+  text-align: center;
 }
 
 .votes-card {
@@ -27,23 +32,25 @@
 }
 
 .indicator-heading {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
+  display: grid;
+  justify-items: center;
+  gap: 0.05rem;
 }
 
 .indicator-heading h2 {
   margin: 0;
+  overflow: hidden;
   color: var(--color-text);
-  font-size: 1.05rem;
-  line-height: 1.2;
+  font-size: clamp(0.66rem, 3vw, 0.85rem);
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .indicator-icon {
   display: grid;
-  width: 2.2rem;
-  height: 2.2rem;
-  flex: 0 0 auto;
+  width: 1.65rem;
+  height: 1.65rem;
   place-items: center;
   color: var(--color-primary-dark);
 }
@@ -57,8 +64,8 @@
 }
 
 .indicator-icon svg {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.45rem;
+  height: 1.45rem;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -72,20 +79,27 @@
 }
 
 .indicator-value {
+  width: 100%;
   margin: 0;
+  overflow: hidden;
   color: var(--color-text);
-  font-size: clamp(1.5rem, 6vw, 2.2rem);
+  font-size: clamp(0.9rem, 4.2vw, 1.3rem);
   font-weight: 800;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
   line-height: 1.1;
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .indicator-detail {
+  width: 100%;
   margin: 0;
+  overflow: hidden;
   color: var(--color-muted);
-  font-size: 1rem;
-  line-height: 1.4;
+  font-size: 0.66rem;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .visually-hidden {
@@ -97,22 +111,26 @@
   white-space: nowrap;
 }
 
-@media (min-width: 36rem) {
-  .indicators-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (min-width: 48rem) {
+  .indicator-card {
+    min-height: 6.5rem;
   }
 
-  .sections-card {
-    grid-column: 1 / -1;
+  .indicator-heading h2 {
+    font-size: 0.95rem;
+  }
+
+  .indicator-value {
+    font-size: 1.55rem;
   }
 }
 
-@media (min-width: 64rem) {
-  .indicators-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+@media (max-height: 43rem) {
+  .indicator-card {
+    min-height: 4.5rem;
   }
 
-  .sections-card {
-    grid-column: auto;
+  .indicator-icon {
+    display: none;
   }
 }

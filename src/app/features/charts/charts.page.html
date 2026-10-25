@@ -1,13 +1,8 @@
 <section class="feature-page" aria-labelledby="charts-title">
-  <p class="eyebrow">Acompanhamento detalhado</p>
-  <h1 id="charts-title">Gráficos</h1>
-  <p class="page-description">
-    Compare votos, veja a evolução das atualizações capturadas e acompanhe o avanço das seções.
-    Os números também aparecem em texto para facilitar a leitura.
-  </p>
+  <h1 id="charts-title" class="visually-hidden">Gráficos da apuração</h1>
 
   @if (snapshot(); as election) {
-    <p class="source-note">{{ sourceNote() }}</p>
+    <p class="visually-hidden">{{ sourceNote() }}</p>
     <app-election-charts [snapshot]="election" [detailed]="true" />
   } @else if (isLoading()) {
     <p class="state-message" role="status">Consultando dados da eleição...</p>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { provideElectionCharts } from '../../charts/chart-runtime';
 import type { EChartsCoreOption } from 'echarts/core';
@@ -11,6 +11,7 @@ const PERCENT_FORMAT = new Intl.NumberFormat('pt-BR', {
 });
 const INTEGER_FORMAT = new Intl.NumberFormat('pt-BR');
 const TIME_FORMAT = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' });
+type ChartView = 'votes' | 'timeline' | 'sections';
 
 @Component({
   selector: 'app-election-charts',
@@ -23,6 +24,7 @@ const TIME_FORMAT = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: 
 export class ElectionChartsComponent {
   readonly snapshot = input.required<ElectionSnapshot>();
   readonly detailed = input(false);
+  protected readonly activeView = signal<ChartView>('votes');
 
   protected readonly rankedCandidates = computed(() =>
     this.snapshot().results.filter((result) => result.validVotePercent !== null),
@@ -40,10 +42,6 @@ export class ElectionChartsComponent {
 
     return new Map(ids.map((id, index) => [id, CHART_COLORS[index % CHART_COLORS.length]] as const));
   });
-
-  protected readonly voteBarHeight = computed(() =>
-    `${Math.max(220, this.rankedCandidates().length * 48)}px`,
-  );
 
   protected readonly voteBarOptions = computed<EChartsCoreOption>(() => {
     const results = this.rankedCandidates();
@@ -193,5 +191,9 @@ export class ElectionChartsComponent {
     }
 
     return `${INTEGER_FORMAT.format(countedSections)} de ${INTEGER_FORMAT.format(totalSections)} seções (${this.formatPercent(countedSectionsPercent)}).`;
+  }
+
+  protected selectView(view: ChartView): void {
+    this.activeView.set(view);
   }
 }

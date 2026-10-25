@@ -1,6 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { AlertAnnouncer } from '../../core/services/alert-announcer';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ElectionAlertsService } from '../../core/services/election-alerts.service';
 import { ElectionStore } from '../../core/services/election-store';
 import type { ElectionSnapshot, TallyStatus } from '../../core/models/election.models';
@@ -20,53 +18,61 @@ const STATUS_TITLES: Record<TallyStatus, string> = {
   final: 'Totalização final publicada',
 };
 
-function getSessionAlerts(snapshot: ElectionSnapshot | null): readonly SessionAlert[] {
-  if (!snapshot || snapshot.source.mode !== 'demonstration' || !snapshot.lastSuccessfulQueryAt) {
+const PERCENT_FORMAT = new Intl.NumberFormat('pt-BR', {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
+
+function getCapturedUpdates(snapshot: ElectionSnapshot | null): readonly SessionAlert[] {
+  if (!snapshot) {
     return [];
   }
 
-  return [
-    {
-      id: 'demonstration-loaded',
-      title: 'Amostra demonstrativa carregada',
-      details:
-        'Este registro confirma apenas que uma amostra sintética foi carregada nesta sessão. Não representa evento ou resultado eleitoral real.',
-      occurredAt: snapshot.lastSuccessfulQueryAt,
-    },
-  ];
+  return snapshot.history.map((point) => ({
+    id: `capture-${point.officialGenerationId ?? 'snapshot'}-${point.capturedAt.toISOString()}`,
+    title: 'Apuração atualizada',
+    details:
+      point.countedSectionsPercent === null
+        ? 'Atualização capturada sem percentual de seções disponível.'
+        : `${PERCENT_FORMAT.format(point.countedSectionsPercent)}% das seções totalizadas${snapshot.source.mode === 'demonstration' ? ' · demonstração' : ''}.`,
+    occurredAt: point.capturedAt,
+  }));
 }
 
 @Component({
   selector: 'app-alerts-page',
-  imports: [RouterLink],
   templateUrl: './alerts.page.html',
   styleUrl: './alerts.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertsPage {
   private readonly electionStore = inject(ElectionStore);
-  private readonly alertAnnouncer = inject(AlertAnnouncer);
   private readonly electionAlerts = inject(ElectionAlertsService);
 
   protected readonly snapshot = this.electionStore.snapshot;
   protected readonly isLoading = this.electionStore.isLoading;
   protected readonly errorMessage = this.electionStore.errorMessage;
   protected readonly events = computed(() =>
-    [...this.electionAlerts.events(), ...getSessionAlerts(this.snapshot())].sort(
+    [...this.electionAlerts.events(), ...getCapturedUpdates(this.snapshot())].sort(
       (left, right) => right.occurredAt.getTime() - left.occurredAt.getTime(),
     ),
   );
-  protected readonly announcement = signal('');
-  protected readonly statusTitle = computed(() => {
+  protected readonly visibleEvents = computed(() => this.events().slice(0, 5));
+  protected readonly statusHeadline = computed(() => {
     const snapshot = this.snapshot();
-    return snapshot ? STATUS_TITLES[snapshot.status] : 'Consultando a apuração';
+
+    if (!snapshot) {
+      return 'Consultando a apuração';
+    }
+
+    if (snapshot.status === 'in-progress' || snapshot.status === 'waiting') {
+      return 'Aguardando definição oficial';
+    }
+
+    return STATUS_TITLES[snapshot.status];
   });
 
-  protected formatDate(value: Date): string {
-    return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'full', timeStyle: 'short' }).format(value);
-  }
-
-  protected repeatAlert(message: string): void {
-    this.announcement.set(this.alertAnnouncer.repeat(message));
+  protected formatTime(value: Date): string {
+    return new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(value);
   }
 }

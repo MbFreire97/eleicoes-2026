@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CandidateComparisonComponent } from '../../shared/components/candidate-comparison/candidate-comparison.component';
-import { ElectionChartsComponent } from '../../shared/components/election-charts/election-charts.component';
 import { ElectionIndicatorsComponent } from '../../shared/components/election-indicators/election-indicators.component';
 import { ElectionStore } from '../../core/services/election-store';
 import type { TallyStatus } from '../../core/models/election.models';
@@ -21,9 +20,17 @@ function formatDate(value: Date | null, emptyText: string): string {
   return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium', timeStyle: 'short' }).format(value);
 }
 
+const PERCENT_FORMAT = new Intl.NumberFormat('pt-BR', {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
+
+const TIME_FORMAT = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' });
+const DATE_FORMAT = new Intl.DateTimeFormat('pt-BR');
+
 @Component({
   selector: 'app-home-page',
-  imports: [CandidateComparisonComponent, ElectionIndicatorsComponent, ElectionChartsComponent],
+  imports: [CandidateComparisonComponent, ElectionIndicatorsComponent],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,8 +61,8 @@ export class HomePage {
   });
   protected readonly sourceLabel = computed(() =>
     this.snapshot()?.source.mode === 'demonstration'
-      ? 'Demonstração · valores sintéticos'
-      : 'Fonte oficial: Tribunal Superior Eleitoral (TSE)',
+      ? 'Demonstração · dados sintéticos'
+      : 'Dados oficiais do TSE',
   );
   protected readonly lastQueryLabel = computed(() =>
     formatDate(this.lastSuccessfulQueryAt(), 'Ainda não houve consulta bem-sucedida'),
@@ -63,4 +70,16 @@ export class HomePage {
   protected readonly officialUpdateLabel = computed(() =>
     formatDate(this.snapshot()?.officialUpdatedAt ?? null, 'O arquivo ainda não informa horário de totalização'),
   );
+  protected readonly sectionsPercentLabel = computed(() => {
+    const value = this.snapshot()?.totals.countedSectionsPercent;
+    return value === null || value === undefined ? '—' : `${PERCENT_FORMAT.format(value)}%`;
+  });
+  protected readonly officialUpdateTime = computed(() => {
+    const value = this.snapshot()?.officialUpdatedAt;
+    return value ? TIME_FORMAT.format(value) : '—';
+  });
+  protected readonly officialUpdateDate = computed(() => {
+    const value = this.snapshot()?.officialUpdatedAt;
+    return value ? DATE_FORMAT.format(value) : 'aguardando publicação';
+  });
 }
