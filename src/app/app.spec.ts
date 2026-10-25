@@ -45,10 +45,10 @@ describe('App', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.status-card')?.textContent).toContain('Demonstração');
+    expect(compiled.querySelector('.overview-card')?.textContent).toContain('Demonstração');
     expect(compiled.querySelector('.candidate-list')?.textContent).toContain('Candidato de exemplo 1');
     expect(compiled.querySelector('.indicators-grid')?.textContent).toContain('4,6');
-    expect(compiled.textContent).toContain('sem relação com candidatos ou resultados reais');
+    expect(compiled.textContent).toContain('Demonstração: nomes e valores sintéticos');
   });
 
   it('navigates across the four planned sections while keeping the app shell', async () => {
@@ -56,10 +56,10 @@ describe('App', () => {
     fixture.detectChanges();
     const router = TestBed.inject(Router);
     const sections = [
-      ['/inicio', 'Apuração presidencial 2026'],
-      ['/graficos', 'Gráficos'],
-      ['/alertas', 'Alertas'],
-      ['/ajuda', 'Ajuda'],
+      ['/inicio', '2º turno – Presidente'],
+      ['/graficos', 'Gráficos da apuração'],
+      ['/alertas', 'Alertas da apuração'],
+      ['/ajuda', 'Ajuda e acessibilidade'],
     ] as const;
 
     for (const [path, expectedHeading] of sections) {
